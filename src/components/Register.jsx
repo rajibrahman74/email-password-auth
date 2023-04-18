@@ -1,6 +1,16 @@
 import React from "react";
 
 const Register = () => {
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    console.log(email, password);
+
+  }
+
+
   return (
     <>
       <style
@@ -225,7 +235,7 @@ const Register = () => {
                 <h1 className="font-bold text-3xl text-gray-900">REGISTER</h1>
                 <p>Enter your information to register</p>
               </div>
-              <div>
+              <form onSubmit={handleSubmit}>
                 {/* <div className="flex -mx-3">
                   <div className="w-1/2 px-3 mb-5">
                     <label htmlFor="" className="text-xs font-semibold px-1">
@@ -299,7 +309,7 @@ const Register = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
