@@ -1,15 +1,30 @@
 import React from "react";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import app from "../firebase/firebase.config";
+
+const auth = getAuth(app);
 
 const Register = () => {
+  const handleSubmit = (e) => {
 
-  const handleSubmit = e => {
+    // 1. prevent form
     e.preventDefault();
+
+    // 2. collect data
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log(email, password);
 
-  }
-
+    // createUserWith firebase, EmailAndPassword
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(result => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
+    })
+    .catch(error => {
+      console.error(error);
+    })
+  };
 
   return (
     <>
@@ -278,7 +293,8 @@ const Register = () => {
                         <i className="mdi mdi-email-outline text-gray-400 text-lg" />
                       </div>
                       <input
-                        type="email" id="email"
+                        type="email"
+                        id="email"
                         className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                         placeholder="johnsmith@example.com"
                       />
@@ -295,7 +311,8 @@ const Register = () => {
                         <i className="mdi mdi-lock-outline text-gray-400 text-lg" />
                       </div>
                       <input
-                        type="password" id="password"
+                        type="password"
+                        id="password"
                         className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                         placeholder="************"
                       />
@@ -304,7 +321,10 @@ const Register = () => {
                 </div>
                 <div className="flex -mx-3">
                   <div className="w-full px-3 mb-5">
-                    <button id="submit" className="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold">
+                    <button
+                      id="submit"
+                      className="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold"
+                    >
                       REGISTER NOW
                     </button>
                   </div>
