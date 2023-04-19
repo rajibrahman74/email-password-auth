@@ -1,29 +1,39 @@
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
+import app from "../firebase/firebase.config";
+import { Link } from "react-router-dom";
 
+const auth = getAuth(app);
 const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
     console.log(email, password);
 
-    if (!/(?=.*[a-z])/.test(password)) {
-      setError("Please add at least one lowercase character in your password");
-      return;
-    } else if (!/(?=.*[A-Z])/.test(password)) {
-      setError("Please add at least one uppercase character in your password");
-      return;
-    } else if (!/(?=.*\d)/.test(password)) {
-      setError("Must contain at least one numeric digit.");
-      return;
-    } else if (password.length < 6) {
-      setError("Please add at least 6 characters in your password.");
-      return;
-    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        const loginUser = result.user;
+        console.log(loginUser);
+        if(!loginUser.emailVerified) {
+          alert("Your email is not verified");
+        }
+        setError("");
+        setSuccess("User login has been successfully");
+        e.target.reset();
+      })
+      .catch((error) => {
+        console.error(error.message);
+        setError(error.message);
+      });
   };
 
   return (
@@ -32,6 +42,8 @@ const Login = () => {
         <h1 className="text-3xl font-bold text-center mb-8">
           Log in to your account
         </h1>
+        <span className="text-red-600 font-semibold">{error}</span>
+        <span className="text-green-600 font-semibold">{success}</span>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
@@ -70,6 +82,12 @@ const Login = () => {
             Log in
           </button>
         </form>
+        <p className="text-center pt-3 text-lg">
+          <small>
+            New to this website? Please
+            <Link className="text-blue-600" to="/register"> Register</Link>
+          </small>
+        </p>
       </div>
     </div>
   );
