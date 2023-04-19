@@ -3,6 +3,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import app from "../firebase/firebase.config";
 import { Link } from "react-router-dom";
@@ -24,7 +25,8 @@ const Register = () => {
     // 2. collect data
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(email, password);
+    const name = e.target.name.value;
+    console.log(email, password, name);
 
     // validation
 
@@ -50,6 +52,8 @@ const Register = () => {
         setError("");
         e.target.reset();
         setSuccess("User has been created successfully");
+
+        // email verification process
         sendEmailVerification(loggedUser)
           .then(() => {
             console.log("Email verification sent");
@@ -57,6 +61,15 @@ const Register = () => {
           })
           .catch((error) => {
             console.error(error.message);
+          });
+
+        // user profile updated process
+        updateProfile(loggedUser, { displayName: name })
+          .then(() => {
+            console.log("Profile Updated");
+          })
+          .catch((error) => {
+            setError(error.message);
           });
       })
       .catch((error) => {
@@ -331,7 +344,10 @@ const Register = () => {
                     </label>
                     <div className="flex">
                       <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
-                        <FontAwesomeIcon className="h-[13px] text-[#9ca3af]" icon={faUserPlus} />
+                        <FontAwesomeIcon
+                          className="h-[13px] text-[#9ca3af]"
+                          icon={faUserPlus}
+                        />
                       </div>
                       <input
                         type="text"
@@ -395,8 +411,7 @@ const Register = () => {
                 <p className="text-center text-lg">
                   <small>
                     Already have an account? Please
-                    <Link className="text-blue-600 font-semibold" to="/login">
-                      {" "}
+                    <Link className="text-blue-600 font-semibold ml-1" to="/login">
                       Login
                     </Link>
                   </small>
