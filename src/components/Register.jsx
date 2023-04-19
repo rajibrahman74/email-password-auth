@@ -1,29 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import app from "../firebase/firebase.config";
 
 const auth = getAuth(app);
 
 const Register = () => {
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
+  const handleSubmit = (e) => {
     // 1. prevent form
     e.preventDefault();
+    setSuccess("");
+    setError("");
 
     // 2. collect data
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log(email, password);
 
+    // validation
+
+    if (!/(?=.*[a-z])/.test(password)) {
+      setError("Must contain at least one lowercase letter.");
+      return;
+    } else if (!/(?=.*[A-Z])/.test(password)) {
+      setError("Must contain at least one uppercase letter.");
+      return;
+    } else if (!/(?=.*\d)/.test(password)) {
+      setError("Must contain at least one numeric digit.");
+      return;
+    } else if (password.length < 6) {
+      setError("Please add at least 6 characters in your password.");
+      return;
+    }
+
     // createUserWith firebase, EmailAndPassword
     createUserWithEmailAndPassword(auth, email, password)
-    .then(result => {
-      const loggedUser = result.user;
-      console.log(loggedUser);
-    })
-    .catch(error => {
-      console.error(error);
-    })
+      .then((result) => {
+        const loggedUser = result.user;
+        console.log(loggedUser);
+        setError("");
+        e.target.reset();
+        setSuccess("User has been created successfully");
+      })
+      .catch((error) => {
+        console.error(error.message);
+        setError(error.message);
+      });
   };
 
   return (
@@ -250,6 +274,8 @@ const Register = () => {
                 <h1 className="font-bold text-3xl text-gray-900">REGISTER</h1>
                 <p>Enter your information to register</p>
               </div>
+              <span className="text-red-600 font-semibold">{error}</span>
+              <span className="text-green-600 font-semibold">{success}</span>
               <form onSubmit={handleSubmit}>
                 {/* <div className="flex -mx-3">
                   <div className="w-1/2 px-3 mb-5">
@@ -297,6 +323,7 @@ const Register = () => {
                         id="email"
                         className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                         placeholder="johnsmith@example.com"
+                        required
                       />
                     </div>
                   </div>
@@ -315,6 +342,7 @@ const Register = () => {
                         id="password"
                         className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
                         placeholder="************"
+                        required
                       />
                     </div>
                   </div>
