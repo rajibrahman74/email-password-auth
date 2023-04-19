@@ -7,11 +7,14 @@ import React, { useState } from "react";
 import app from "../firebase/firebase.config";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const auth = getAuth(app);
 const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const emailRef = useRef();
 
   const handleLogin = (e) => {
@@ -61,6 +64,12 @@ const Login = () => {
       });
   };
 
+
+  // toggle show password
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="bg-white p-10 rounded-lg shadow-md">
@@ -86,7 +95,7 @@ const Login = () => {
               required
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label
               htmlFor="password"
               className="block font-semibold mb-2 text-gray-600"
@@ -94,11 +103,16 @@ const Login = () => {
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               className="border-2 border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:border-blue-500"
               placeholder="Your password"
               required
+            />
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye}
+              onClick={toggleShowPassword}
+              className="cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-3 text-gray-500 mt-4"
             />
           </div>
           <button
