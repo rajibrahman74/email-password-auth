@@ -1,13 +1,29 @@
 import React, { useState } from "react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    console.log(`Email: ${email}, Password: ${password}`);
-    // Send a request to the backend to authenticate the user
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    console.log(email, password);
+
+    if (!/(?=.*[a-z])/.test(password)) {
+      setError("Please add at least one lowercase character in your password");
+      return;
+    } else if (!/(?=.*[A-Z])/.test(password)) {
+      setError("Please add at least one uppercase character in your password");
+      return;
+    } else if (!/(?=.*\d)/.test(password)) {
+      setError("Must contain at least one numeric digit.");
+      return;
+    } else if (password.length < 6) {
+      setError("Please add at least 6 characters in your password.");
+      return;
+    }
   };
 
   return (
@@ -16,7 +32,7 @@ const Login = () => {
         <h1 className="text-3xl font-bold text-center mb-8">
           Log in to your account
         </h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -29,8 +45,7 @@ const Login = () => {
               id="email"
               className="border-2 border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:border-blue-500"
               placeholder="Your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="mb-6">
@@ -45,8 +60,7 @@ const Login = () => {
               id="password"
               className="border-2 border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:border-blue-500"
               placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <button
