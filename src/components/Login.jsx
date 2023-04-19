@@ -1,12 +1,18 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import React, { useState } from "react";
 import app from "../firebase/firebase.config";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 
 const auth = getAuth(app);
 const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const emailRef = useRef();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -23,12 +29,31 @@ const Login = () => {
       .then((result) => {
         const loginUser = result.user;
         console.log(loginUser);
-        if(!loginUser.emailVerified) {
+        if (!loginUser.emailVerified) {
           alert("Your email is not verified");
         }
         setError("");
         setSuccess("User login has been successfully");
         e.target.reset();
+      })
+      .catch((error) => {
+        console.error(error.message);
+        setError(error.message);
+      });
+  };
+
+  //  Reset password
+
+  const handleResetPassword = (e) => {
+    const email = emailRef.current.value;
+    if (!email) {
+      alert("Please provide your email to reset password");
+      return;
+    }
+
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert("Please check your email");
       })
       .catch((error) => {
         console.error(error.message);
@@ -55,6 +80,7 @@ const Login = () => {
             <input
               type="email"
               id="email"
+              ref={emailRef}
               className="border-2 border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:border-blue-500"
               placeholder="Your email address"
               required
@@ -84,8 +110,21 @@ const Login = () => {
         </form>
         <p className="text-center pt-3 text-lg">
           <small>
+            Forget Password? Reset
+            <button
+              onClick={handleResetPassword}
+              className="bg-transparent text-blue-500 hover:underline ml-1"
+            >
+              Reset
+            </button>
+          </small>
+        </p>
+        <p className="text-center pt-3 text-lg">
+          <small>
             New to this website? Please
-            <Link className="text-blue-600" to="/register"> Register</Link>
+            <Link className="text-blue-600 ml-1" to="/register">
+              Register
+            </Link>
           </small>
         </p>
       </div>
