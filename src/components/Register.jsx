@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import app from "../firebase/firebase.config";
 import { Link } from "react-router-dom";
+import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const auth = getAuth(app);
 
@@ -45,13 +51,13 @@ const Register = () => {
         e.target.reset();
         setSuccess("User has been created successfully");
         sendEmailVerification(loggedUser)
-        .then(() => {
-          console.log("Email verification sent");
-          alert("Please verified your email");
-        })
-        .catch(error => {
-          console.error(error.message);
-        })
+          .then(() => {
+            console.log("Email verification sent");
+            alert("Please verified your email");
+          })
+          .catch((error) => {
+            console.error(error.message);
+          });
       })
       .catch((error) => {
         console.error(error.message);
@@ -321,6 +327,26 @@ const Register = () => {
                 <div className="flex -mx-3">
                   <div className="w-full px-3 mb-5">
                     <label htmlFor="" className="text-xs font-semibold px-1">
+                      Your name
+                    </label>
+                    <div className="flex">
+                      <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+                        <FontAwesomeIcon className="h-[13px] text-[#9ca3af]" icon={faUserPlus} />
+                      </div>
+                      <input
+                        type="text"
+                        id="name"
+                        className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500"
+                        placeholder="Enter your name"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex -mx-3">
+                  <div className="w-full px-3 mb-5">
+                    <label htmlFor="" className="text-xs font-semibold px-1">
                       Email
                     </label>
                     <div className="flex">
@@ -369,7 +395,10 @@ const Register = () => {
                 <p className="text-center text-lg">
                   <small>
                     Already have an account? Please
-                    <Link className="text-blue-600 font-semibold" to="/login"> Login</Link>
+                    <Link className="text-blue-600 font-semibold" to="/login">
+                      {" "}
+                      Login
+                    </Link>
                   </small>
                 </p>
               </form>
