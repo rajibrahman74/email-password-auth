@@ -112,7 +112,7 @@ const Login = () => {
             <FontAwesomeIcon
               icon={showPassword ? faEyeSlash : faEye}
               onClick={toggleShowPassword}
-              className="cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-3 text-gray-500 mt-4"
+              className="cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-3 text-[#9ca3af] mt-4"
             />
           </div>
           <button

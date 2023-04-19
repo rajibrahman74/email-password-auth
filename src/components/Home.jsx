@@ -15,7 +15,7 @@ const Home = () => {
             <div className="flex items-center">
               <div className="w-1/2">
                 <h1 className="text-5xl font-medium mb-6">
-                  Welcome to My Agency
+                  Welcome to My Login/Register form
                 </h1>
                 <p className="text-xl mb-12">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
